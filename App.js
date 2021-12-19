@@ -9,45 +9,54 @@ import {
 } from 'react-native';
 import ItemDetails from './components/ItemDetails.js';
 import Colors from './components/Colors.js';
+import Header from './components/Header.js';
+import NewItem from './components/NewItem.js';
 
 const App = () => {
   const getId = () => {
     return Math.random().toString(36).replace('0.', '');
   };
 
-  const [items, setItems] = useState([
-    {
-      id: getId(),
-      content: 'Ser',
-    },
-    {
-      id: getId(),
-      content: 'Szynka',
-    },
-    {
-      id: getId(),
-      content: 'Jogurt',
-    },
-    {
-      id: getId(),
-      content: 'Chleb',
-    },
-    {
-      id: getId(),
-      content: 'Banany',
-    },
-    {
-      id: getId(),
-      content: 'Mleko',
-    },
-  ]);
+  const [items, setItems] = useState([]);
+
+  const newItem = content => {
+    setItems([
+      {
+        id: getId(),
+        content,
+        switched: false,
+        timeAdded: Date().toLocaleString(),
+      },
+      ...items,
+    ]);
+
+    console.log(items);
+
+    //TODO:
+    // const sorted = [...items].sort((x, y) => {
+    //   return x === y ? 0 : x ? 1 : -1;
+    // });
+    // console.log(sorted);
+  };
+
+  const toggleSwitch = id => {
+    setItems(prevItems => {
+      return prevItems.map(item =>
+        item.id === id ? {...item, switched: !item.switched} : item,
+      );
+    });
+  };
 
   return (
     <View style={styles.container}>
       <SafeAreaView>
+        <Header />
+        <NewItem newItem={newItem} />
         <FlatList
           data={items}
-          renderItem={({item}) => <ItemDetails item={item} />}
+          renderItem={({item}) => (
+            <ItemDetails item={item} toggleSwitch={toggleSwitch} />
+          )}
         />
       </SafeAreaView>
     </View>

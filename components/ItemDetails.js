@@ -2,9 +2,13 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, DynamicColorIOS, Switch} from 'react-native';
 import Colors from './Colors.js';
 
-const ItemDetails = ({item}) => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+const ItemDetails = ({item, toggleSwitch}) => {
+  const [isEnabled, setIsEnabled] = useState(item.switched);
+
+  const toggleItem = previousState => {
+    toggleSwitch(item.id);
+    setIsEnabled(previousState => !previousState);
+  };
 
   return (
     <View style={styles.row}>
@@ -13,7 +17,7 @@ const ItemDetails = ({item}) => {
         trackColor={{true: Colors.black}}
         thumbColor={isEnabled ? Colors.yellow : Colors.cream}
         ios_backgroundColor={Colors.black}
-        onValueChange={toggleSwitch}
+        onValueChange={toggleItem}
         value={isEnabled}
       />
       <Text style={styles.contentText}> {item.content}</Text>
