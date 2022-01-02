@@ -6,7 +6,7 @@ const ItemDetails = ({item, toggleSwitch}) => {
   const [isEnabled, setIsEnabled] = useState(item.switched);
 
   const toggleItem = previousState => {
-    toggleSwitch(item.id);
+    toggleSwitch(item.id, previousState);
     setIsEnabled(previousState => !previousState);
   };
 
@@ -18,7 +18,7 @@ const ItemDetails = ({item, toggleSwitch}) => {
         thumbColor={isEnabled ? Colors.yellow : Colors.cream}
         ios_backgroundColor={Colors.black}
         onValueChange={toggleItem}
-        value={isEnabled}
+        value={!isEnabled}
       />
       <Text style={styles.contentText}> {item.content}</Text>
     </View>

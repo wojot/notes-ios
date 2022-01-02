@@ -6,6 +6,7 @@ import {
   FlatList,
   StyleSheet,
   DynamicColorIOS,
+  TouchableOpacity,
 } from 'react-native';
 import ItemDetails from './components/ItemDetails.js';
 import Colors from './components/Colors.js';
@@ -19,6 +20,22 @@ const App = () => {
 
   const [items, setItems] = useState([]);
 
+  function compare(a, b) {
+    if (a.switched < b.switched) {
+      return -1;
+    }
+    if (a.switched > b.switched) {
+      return 1;
+    }
+    return 0;
+  }
+
+  const sortItems = () => {
+    const sorted = [...items];
+    sorted.sort(compare);
+    setItems(sorted);
+  };
+
   const newItem = content => {
     setItems([
       {
@@ -29,20 +46,12 @@ const App = () => {
       },
       ...items,
     ]);
-
-    console.log(items);
-
-    //TODO:
-    // const sorted = [...items].sort((x, y) => {
-    //   return x === y ? 0 : x ? 1 : -1;
-    // });
-    // console.log(sorted);
   };
 
-  const toggleSwitch = id => {
+  const toggleSwitch = (id, previousState) => {
     setItems(prevItems => {
       return prevItems.map(item =>
-        item.id === id ? {...item, switched: !item.switched} : item,
+        item.id === id ? {...item, switched: !previousState} : item,
       );
     });
   };
@@ -52,6 +61,11 @@ const App = () => {
       <SafeAreaView>
         <Header />
         <NewItem newItem={newItem} />
+
+        <TouchableOpacity style={styles.button} onPress={() => sortItems()}>
+          <Text style={styles.buttonTxt}>Sort</Text>
+        </TouchableOpacity>
+
         <FlatList
           data={items}
           renderItem={({item}) => (
@@ -70,6 +84,14 @@ const dynamicBackground = DynamicColorIOS({
 
 const styles = StyleSheet.create({
   container: {backgroundColor: dynamicBackground},
+  button: {
+    backgroundColor: Colors.black,
+    padding: 10,
+    marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonTxt: {color: Colors.yellow, fontWeight: 'bold', fontSize: 20},
 });
 
 export default App;
